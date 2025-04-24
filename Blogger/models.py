@@ -1,9 +1,12 @@
-from Blogger import db
+from Blogger import db,loginManager
 from datetime import datetime
+from flask_login import UserMixin
 
+@loginManager.user_loader
+def load_user(userId):
+    return User.query.get(int(userId))
 
-
-class User (db.Model):
+class User (db.Model,UserMixin):
     id=db.Column(db.Integer,primary_key=True,autoincrement=True)
     name = db.Column(db.String(255), nullable=False)
     phone = db.Column(db.String(11),unique=True, nullable=False)
