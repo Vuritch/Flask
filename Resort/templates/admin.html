@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<style>
+body {
+    background: linear-gradient(to right, #e3f2fd, #ffffff);
+    min-height: 100vh;
+
+}
+
+.admin-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+.btn-custom {
+    background: linear-gradient(45deg, #007bff, #00bcd4);
+    color: white;
+    font-weight: bold;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    transition: 0.3s ease-in-out;
+}
+
+.btn-custom:hover {
+    background: linear-gradient(45deg, #0056b3, #008ba3);
+    transform: translateY(-2px);
+}
+</style>
+
+<div class="admin-container">
+    <h2 class="text-center mb-4">👑 Admin Dashboard</h2>
+
+    <div class="text-center mb-4">
+        <a href="{{ url_for('admin.view_users') }}" class="btn btn-custom">عرض المسجلين</a>
+    </div>
+
+    <!-- ممكن تضيف هنا Cards للمستقبل أو إحصائيات -->
+</div>
+{% endblock %}
