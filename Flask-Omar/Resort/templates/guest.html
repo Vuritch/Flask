@@ -1,0 +1,256 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+.auth-wrapper {
+    position: relative;
+    min-height: calc(100vh - 180px);
+    background-color: transparent;
+    overflow: hidden;
+    margin-top: 2rem;
+    padding: 2rem 0;
+}
+
+.auth-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+                url("{{ url_for('static', filename='images/sasha-kaunas-xEaAoizNFV8-unsplash.jpg') }}") center/cover no-repeat fixed;
+    z-index: -1;
+}
+
+.auth-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 2rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.2);
+    z-index: 1;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.auth-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.resort-logo {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 0.5rem;
+    background: rgba(255,255,255,0.9);
+    padding: 0.75rem;
+    border-radius: 50%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.welcome-text {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(45deg, #007bff, #00bcd4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.25rem;
+}
+
+.form-floating > .form-control {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(0,0,0,0.1);
+    border-radius: 12px;
+    height: calc(3rem + 2px);
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-floating > .form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+    border-color: var(--bs-primary);
+    background-color: #fff;
+}
+
+.form-floating > label {
+    padding: 0.75rem 1rem;
+}
+
+.btn-primary {
+    padding: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 12px;
+    background: linear-gradient(45deg, #007bff, #00bcd4);
+    border: none;
+    box-shadow: 0 5px 15px rgba(0,123,255,0.4);
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,123,255,0.6);
+    background: linear-gradient(45deg, #0056b3, #008ba3);
+}
+
+.text-primary {
+    color: #007bff !important;
+}
+
+a.text-primary:hover {
+    color: #0056b3 !important;
+    text-decoration: none;
+}
+
+.form-floating {
+    margin-bottom: 1rem;
+}
+
+.d-grid {
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+    .auth-card {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+    .welcome-text {
+        font-size: 1.75rem;
+    }
+    .auth-wrapper {
+        padding: 1rem 0;
+    }
+}
+</style>
+
+<div class="auth-wrapper">
+    <div class="auth-background"></div>
+    <div class="container">
+        <div class="row justify-content-center align-items-center" style="min-height: calc(100vh - 180px);">
+            <div class="col-lg-5">
+                <div class="auth-card">
+                    <div class="text-center mb-4">
+                        <img src="{{ url_for('static', filename='images/bilderboken-rlwE8f8anOc-unsplash.jpg') }}" alt="Resort Logo" class="resort-logo">
+                        <h1 class="welcome-text">Guest Information</h1>
+                        <p class="text-muted">Please provide your details to proceed</p>
+                    </div>
+
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <form method="POST" action="{{ url_for('bookings.guest') }}" class="needs-validation" novalidate>
+
+                        {{ form.hidden_tag() }}
+
+                        <!-- Guest Name -->
+                        <div class="form-floating mb-4">
+                            {{ form.guest_name(class="form-control", placeholder="Full Name") }}
+                            {{ form.guest_name.label }}
+                            {% if form.guest_name.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.guest_name.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Guest Age -->
+                        <div class="form-floating mb-4">
+                            {{ form.guest_age(class="form-control", placeholder="Age") }}
+                            {{ form.guest_age.label }}
+                            {% if form.guest_age.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.guest_age.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Guest Email -->
+                        <div class="form-floating mb-4">
+                            {{ form.guest_email(class="form-control", placeholder="Email Address") }}
+                            {{ form.guest_email.label }}
+                            {% if form.guest_email.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.guest_email.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Guest Address -->
+                        <div class="form-floating mb-4">
+                            {{ form.guest_address(class="form-control", placeholder="Your Address") }}
+                            {{ form.guest_address.label }}
+                            {% if form.guest_address.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.guest_address.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Guest Phone -->
+                        <div class="form-floating mb-4">
+                            {{ form.guest_phone(class="form-control", placeholder="Phone Number") }}
+                            {{ form.guest_phone.label }}
+                            {% if form.guest_phone.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.guest_phone.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Guest Nationality -->
+                        <div class="form-floating mb-4">
+                            {{ form.guest_nationality(class="form-control", placeholder="Nationality") }}
+                            {{ form.guest_nationality.label }}
+                            {% if form.guest_nationality.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.guest_nationality.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Submit Button -->
+                        
+                            <button type="submit" class="btn btn-success">Confirm Booking</button>
+                        
+                        
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

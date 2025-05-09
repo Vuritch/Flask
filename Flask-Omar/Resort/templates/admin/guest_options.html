@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block body %}
+  <!-- Header with Back, Title, and New Button -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-outline-secondary">
+      <i class="fas fa-arrow-left me-1"></i> Dashboard
+    </a>
+    <h1 class="h3 mb-0">Guest Options</h1>
+    <a href="{{ url_for('admin.admin_create_guest_option') }}" class="btn btn-primary">
+      <i class="fas fa-plus me-1"></i> New Option
+    </a>
+  </div>
+
+  <!-- Card container for the table -->
+  <div class="card shadow-sm">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Adults</th>
+            <th scope="col">Children</th>
+            <th scope="col">Label</th>
+            <th scope="col" class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for o in opts %}
+          <tr>
+            <td>{{ o.id }}</td>
+            <td>{{ o.adult_count }}</td>
+            <td>{{ o.child_count }}</td>
+            <td>{{ o.label }}</td>
+            <td class="text-end">
+              <a href="{{ url_for('admin.admin_edit_guest_option', opt_id=o.id) }}" class="btn btn-sm btn-outline-primary me-1">
+                <i class="fas fa-edit"></i>
+              </a>
+              <a href="{{ url_for('admin.admin_delete_guest_option', opt_id=o.id) }}" class="btn btn-sm btn-outline-danger"
+                 onclick="return confirm('Delete this option?');">
+                <i class="fas fa-trash"></i>
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

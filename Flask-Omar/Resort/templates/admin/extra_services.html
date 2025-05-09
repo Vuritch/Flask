@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block body %}
+  <!-- Header with Back to Dashboard -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Extra Services</h1>
+    <div>
+      <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-outline-secondary me-2">
+        <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+      </a>
+      <a href="{{ url_for('admin.admin_create_extra_service') }}" class="btn btn-primary">
+        <i class="fas fa-plus me-1"></i> New Service
+      </a>
+    </div>
+  </div>
+
+  <!-- Card-wrapped Table -->
+  <div class="card shadow-sm">
+    <div class="card-body p-0">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Type</th>
+            <th scope="col" class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in services %}
+          <tr>
+            <td>{{ s.id }}</td>
+            <td>{{ s.name }}</td>
+            <td>${{ "%.2f"|format(s.price) }}</td>
+            <td class="text-capitalize">{{ s.type }}</td>
+            <td class="text-end">
+              <a href="{{ url_for('admin.admin_edit_extra_service', svc_id=s.id) }}"
+                 class="btn btn-sm btn-outline-primary me-1">
+                <i class="fas fa-edit"></i>
+              </a>
+              <a href="{{ url_for('admin.admin_delete_extra_service', svc_id=s.id) }}"
+                 class="btn btn-sm btn-outline-danger"
+                 onclick="return confirm('Are you sure you want to delete this service?');">
+                <i class="fas fa-trash-alt"></i>
+              </a>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="5" class="text-center py-3">No extra services found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,240 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<!-- Hero Section with Video Background -->
+<div class="hero-section position-relative">
+    <div class="video-background">
+        <video autoplay muted loop class="w-100 h-100 object-fit-cover">
+            <source src="{{ url_for('static', filename='images/resort-video.mp4') }}" type="video/mp4">
+            <!-- Fallback background -->
+            <img src="{{ url_for('static', filename='images/fabio-fistarol-qai_Clhyq0s-unsplash.jpg') }}" class="w-100 h-100 object-fit-cover" alt="Resort View">
+        </video>
+    </div>
+    <div class="hero-content position-absolute w-100 h-100 d-flex align-items-center justify-content-center">
+        <div class="text-center text-white">
+            {% if welcome_message %}
+            <div class="welcome-alert animate__animated animate__fadeInDown">
+                <h4 class="mb-2">Welcome {{ name }}! 🌟</h4>
+                <p class="mb-4">Your paradise adventure begins now.</p>
+            </div>
+            {% endif %}
+            <h1 class="display-2 fw-bold mb-4 animate__animated animate__fadeInUp">Welcome to Paradise</h1>
+            <p class="lead fs-3 mb-5 animate__animated animate__fadeInUp animate__delay-1s">Where Dreams Meet Reality</p>
+            <div class="animate__animated animate__fadeInUp animate__delay-2s">
+                <a href="#explore" class="btn btn-primary btn-lg px-5 py-3 me-3 rounded-pill">Explore Now</a>
+                <a href="{{ url_for('bookings.booking') }}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill">Book Stay</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Stats Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row g-4 text-center">
+            <div class="col-md-3 col-6">
+                <div class="stat-card p-4 rounded-4 bg-white shadow-sm hover-lift">
+                    <i class="fas fa-hotel fa-2x text-primary mb-3"></i>
+                    <h3 class="counter">150</h3>
+                    <p class="text-muted mb-0">Luxury Rooms</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card p-4 rounded-4 bg-white shadow-sm hover-lift">
+                    <i class="fas fa-swimming-pool fa-2x text-primary mb-3"></i>
+                    <h3 class="counter">5</h3>
+                    <p class="text-muted mb-0">Swimming Pools</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card p-4 rounded-4 bg-white shadow-sm hover-lift">
+                    <i class="fas fa-utensils fa-2x text-primary mb-3"></i>
+                    <h3 class="counter">4</h3>
+                    <p class="text-muted mb-0">Restaurants</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card p-4 rounded-4 bg-white shadow-sm hover-lift">
+                    <i class="fas fa-smile fa-2x text-primary mb-3"></i>
+                    <h3 class="counter">10K+</h3>
+                    <p class="text-muted mb-0">Happy Guests</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Experiences -->
+<section id="explore" class="py-5">
+    <div class="container">
+        <h2 class="text-center display-4 mb-5">Unforgettable Experiences</h2>
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="experience-card position-relative rounded-4 overflow-hidden h-100">
+                    <img src="{{ url_for('static', filename='images/chelsea-gates-0653_wY0nRc-unsplash.jpg') }}" class="w-100 h-100 object-fit-cover" alt="Luxury Pool">
+                    <div class="experience-overlay d-flex align-items-end">
+                        <div class="p-4 text-white">
+                            <h3>Infinity Pool Paradise</h3>
+                            <p class="mb-0">Experience serenity in our world-class infinity pools</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="row g-4">
+                    <div class="col-md-12">
+                        <div class="experience-card position-relative rounded-4 overflow-hidden">
+                            <img src="{{ url_for('static', filename='images/xavier-coiffic-lQ4mfS5Le6M-unsplash.jpg') }}" class="w-100" style="height: 300px; object-fit: cover;" alt="Ocean View">
+                            <div class="experience-overlay d-flex align-items-end">
+                                <div class="p-4 text-white">
+                                    <h3>Ocean View Suites</h3>
+                                    <p class="mb-0">Wake up to breathtaking ocean views</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="experience-card position-relative rounded-4 overflow-hidden">
+                            <img src="{{ url_for('static', filename='images/sara-dubler-Koei_7yYtIo-unsplash.jpg') }}" class="w-100" style="height: 200px; object-fit: cover;" alt="Spa">
+                            <div class="experience-overlay d-flex align-items-end">
+                                <div class="p-3 text-white">
+                                    <h4>Luxury Spa</h4>
+                                    <p class="mb-0 small">Rejuvenate your senses</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="experience-card position-relative rounded-4 overflow-hidden">
+                            <img src="{{ url_for('static', filename='images/paolo-nicolello-2gOxKj594nM-unsplash.jpg') }}" class="w-100" style="height: 200px; object-fit: cover;" alt="Dining">
+                            <div class="experience-overlay d-flex align-items-end">
+                                <div class="p-3 text-white">
+                                    <h4>Fine Dining</h4>
+                                    <p class="mb-0 small">Culinary excellence</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Special Offers -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h2 class="display-4 mb-4">Special Summer Offer</h2>
+                <p class="lead mb-4">Book now and get 20% off on your luxury stay. Limited time offer!</p>
+                <ul class="list-unstyled mb-4">
+                    <li><i class="fas fa-check me-2"></i> Complimentary breakfast</li>
+                    <li><i class="fas fa-check me-2"></i> Free spa treatment</li>
+                    <li><i class="fas fa-check me-2"></i> Airport transfer</li>
+                </ul>
+            </div>
+            <div class="col-lg-4 text-center">
+                <a href="{{ url_for('bookings.booking') }}" class="btn btn-light btn-lg px-5 py-3 rounded-pill">
+                    Book Now <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.video-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("{{ url_for('static', filename='images/fabio-fistarol-qai_Clhyq0s-unsplash.jpg') }}") center/cover no-repeat;
+}
+
+.hero-section {
+    height: 100vh;
+    background: #000;
+}
+
+.hero-content {
+    background: rgba(0,0,0,0.4);
+    z-index: 1;
+}
+
+.welcome-alert {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    transition: transform 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-10px);
+}
+
+.experience-card {
+    transition: transform 0.3s ease;
+}
+
+.experience-card:hover {
+    transform: scale(1.02);
+}
+
+.experience-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    transition: all 0.3s ease;
+}
+
+.counter {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--bs-primary);
+}
+
+.animate__animated {
+    animation-duration: 1s;
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        height: 80vh;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Counter animation
+    const counters = document.querySelectorAll('.counter');
+    counters.forEach(counter => {
+        const target = +counter.innerText.replace(/\D/g, '');
+        const increment = target / 50;
+        let current = 0;
+
+        const updateCounter = () => {
+            if(current < target) {
+                current += increment;
+                counter.innerText = Math.ceil(current);
+                setTimeout(updateCounter, 20);
+            } else {
+                counter.innerText = target.toLocaleString();
+            }
+        };
+
+        updateCounter();
+    });
+});
+</script>
+{% endblock %}

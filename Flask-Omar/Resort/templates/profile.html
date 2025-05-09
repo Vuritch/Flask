@@ -1,0 +1,62 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="row">
+  <!-- Edit Profile -->
+  <div class="col-md-6">
+    <h2>Your Profile</h2>
+    <form method="POST">
+      {{ profile_form.hidden_tag() }}
+      <div class="mb-3">
+        {{ profile_form.name.label(class="form-label") }}
+        {{ profile_form.name(class="form-control") }}
+        {% for err in profile_form.name.errors %}
+          <div class="form-text text-danger">{{ err }}</div>
+        {% endfor %}
+      </div>
+      <div class="mb-3">
+        {{ profile_form.email.label(class="form-label") }}
+        {{ profile_form.email(class="form-control") }}
+        {% for err in profile_form.email.errors %}
+          <div class="form-text text-danger">{{ err }}</div>
+        {% endfor %}
+      </div>
+      <button type="submit" name="submit_profile" class="btn btn-primary">
+        {{ profile_form.submit_profile.label.text }}
+      </button>
+    </form>
+  </div>
+
+  <!-- Change Password -->
+  <div class="col-md-6">
+    <h2>Change Password</h2>
+    <form method="POST">
+      {{ pwd_form.hidden_tag() }}
+      <div class="mb-3">
+        {{ pwd_form.old_password.label(class="form-label") }}
+        {{ pwd_form.old_password(class="form-control") }}
+        {% for err in pwd_form.old_password.errors %}
+          <div class="form-text text-danger">{{ err }}</div>
+        {% endfor %}
+      </div>
+      <div class="mb-3">
+        {{ pwd_form.new_password.label(class="form-label") }}
+        {{ pwd_form.new_password(class="form-control") }}
+        {% for err in pwd_form.new_password.errors %}
+          <div class="form-text text-danger">{{ err }}</div>
+        {% endfor %}
+      </div>
+      <div class="mb-3">
+        {{ pwd_form.confirm.label(class="form-label") }}
+        {{ pwd_form.confirm(class="form-control") }}
+        {% for err in pwd_form.confirm.errors %}
+          <div class="form-text text-danger">{{ err }}</div>
+        {% endfor %}
+      </div>
+      <button type="submit" name="submit_password" class="btn btn-warning">
+        {{ pwd_form.submit_password.label.text }}
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

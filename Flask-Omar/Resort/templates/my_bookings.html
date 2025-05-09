@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container py-5">
+  <h2 class="mb-4">My Bookings</h2>
+  <div class="card shadow-sm">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Room</th>
+            <th>Check-In</th>
+            <th>Check-Out</th>
+            <th>Guests</th>
+            <th>Total</th>
+            <th class="text-end">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in bookings %}
+          <tr>
+            <td>{{ b.id }}</td>
+            <td>
+              Room {{ b.room.room_number }}<br>
+              <small class="text-muted">{{ b.room.room_type.name }}</small>
+            </td>
+            <td>{{ b.check_in.strftime('%Y-%m-%d') }}</td>
+            <td>{{ b.check_out.strftime('%Y-%m-%d') }}</td>
+            <td>{{ b.num_adults }}A, {{ b.num_children }}C</td>
+            <td>${{ '%.2f'|format(b.total_price) }}</td>
+            <td class="text-end">
+              {% if b.status == 'pending' %}
+                <span class="badge bg-secondary">{{ b.status.title() }}</span>
+              {% elif b.status == 'accepted' %}
+                <span class="badge bg-success">{{ b.status.title() }}</span>
+              {% elif b.status == 'declined' %}
+                <span class="badge bg-danger">{{ b.status.title() }}</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="7" class="text-center text-muted py-4">
+              You have no bookings yet.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title or "Desert Rose" }}</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet"
+        href="{{ url_for('static', filename='cs/bootstrap.min.css') }}">
+  <!-- Your custom styles -->
+  <link rel="stylesheet"
+        href="{{ url_for('static', filename='cs/main.css') }}">
+  <link rel="stylesheet"
+        href="{{ url_for('static', filename='cs/home.css') }}">
+  <link rel="stylesheet"
+        href="{{ url_for('static', filename='cs/about.css') }}">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+  <style>
+    /* override for account dropdown toggle */
+    .nav-link.account-toggle {
+      display: flex;
+      align-items: center;
+      gap: .25rem;
+    }
+    .nav-link.account-toggle i {
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('main.index') }}">
+        <span class="text-warning">Desert Rose</span>
+      </a>
+      <button class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent"
+              aria-expanded="false"
+              aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <!-- left links -->
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link {{ 'active' if request.endpoint=='index' }}"
+               href="{{ url_for('main.index') }}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {{ 'active' if request.endpoint=='about' }}"
+               href="{{ url_for('main.about') }}">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {{ 'active' if request.endpoint=='booking' }}"
+               href="{{ url_for('bookings.booking') }}">Book Now</a>
+          </li>
+          {% if current_user.is_authenticated and current_user.role=='admin' %}
+          <li class="nav-item">
+            <a class="nav-link {{ 'active' if request.endpoint=='admin_dashboard' }}"
+               href="{{ url_for('admin.admin_dashboard') }}">Admin Dashboard</a>
+          </li>
+          {% endif %}
+        </ul>
+
+        <!-- right: account dropdown -->
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle account-toggle"
+               href="#"
+               id="accountDropdown"
+               role="button"
+               data-bs-toggle="dropdown"
+               aria-expanded="false">
+              <i class="fas fa-user-circle text-light"></i>
+              {% if current_user.is_authenticated %}
+                {{ current_user.name.split(' ')[0] }}
+              {% else %}
+                Account
+              {% endif %}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="accountDropdown">
+              {% if current_user.is_authenticated %}
+                <li>
+                  <a class="dropdown-item" href="{{ url_for('users.profile') }}">
+                    <i class="fas fa-id-card me-1"></i> Profile
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{{ url_for('bookings.my_bookings') }}">
+                    <i class="fas fa-calendar-check me-1"></i> My Bookings
+                  </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <a class="dropdown-item text-danger" href="{{ url_for('users.logout') }}">
+                    <i class="fas fa-sign-out-alt me-1"></i> Logout
+                  </a>
+                </li>
+              {% else %}
+                <li>
+                  <a class="dropdown-item" href="{{ url_for('users.login') }}">
+                    <i class="fas fa-sign-in-alt me-1"></i> Login
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{{ url_for('users.register') }}">
+                    <i class="fas fa-user-plus me-1"></i> Register
+                  </a>
+                </li>
+              {% endif %}
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  {# <-- GLOBAL FLASHES HERE --> #}
+  <div class="container mt-3">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <main class="flex-grow-1">
+    <div class="container py-4">
+      {% block body %}{% endblock %}
+    </div>
+  </main>
+
+  <footer class="bg-dark text-white text-center py-3 mt-auto">
+    <div class="container">
+      All rights reserved © {{ current_year }}
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+</body>
+</html>
