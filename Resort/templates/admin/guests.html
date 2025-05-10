@@ -1,0 +1,104 @@
+{% extends "layout.html" %}
+{% block body %}
+  <!-- Page header + back button -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">
+      <i class="fas fa-user me-2"></i>
+      Manage Guests
+    </h1>
+    <div>
+      <a href="{{ url_for('admin.admin_dashboard') }}"
+         class="btn btn-outline-secondary me-2">
+        <i class="fas fa-arrow-left"></i> Dashboard
+      </a>
+    </div>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Age</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Nationality</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for g in guests %}
+            <tr>
+              <td>{{ g.guest_id }}</td>
+              <td>{{ g.guest_name }}</td>
+              <td>{{ g.guest_age }}</td>
+              <td>{{ g.guest_email }}</td>
+              <td>{{ g.guest_phone }}</td>
+              <td>{{ g.guest_nationality }}</td>
+              <td class="text-center">
+                <!-- delete modal trigger -->
+                <button type="button"
+                        class="btn btn-sm btn-outline-danger"
+                        data-bs-toggle="modal"
+                        data-bs-target="#deleteModal-{{g.guest_id}}"
+                        title="Delete">
+                  <i class="fas fa-trash"></i>
+                </button>
+
+                <!-- Delete Confirmation Modal -->
+                <div class="modal fade"
+                     id="deleteModal-{{g.guest_id}}"
+                     tabindex="-1"
+                     aria-labelledby="deleteModalLabel-{{g.guest_id}}"
+                     aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="deleteModalLabel-{{g.guest_id}}">
+                          <i class="fas fa-exclamation-triangle me-2"></i>
+                          Confirm Delete
+                        </h5>
+                        <button type="button"
+                                class="btn-close btn-close-white"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        Are you sure you want to delete
+                        <strong>{{ g.guest_name }}</strong>?
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal">
+                          Cancel
+                        </button>
+                        <form method="POST"
+                              action="{{ url_for('admin.admin_delete_guest', guest_id=g.guest_id) }}">
+                          <button type="submit" class="btn btn-danger">
+                            Delete
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="7" class="text-center py-4 text-muted">
+                No guests found.
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}

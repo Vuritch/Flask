@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<!-- Dashboard link -->
+<div class="mb-3">
+  <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-outline-secondary">
+    <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+  </a>
+</div>
+
+<!-- Header with title and “Add Room” button -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0"><i class="fas fa-door-open me-2"></i> Rooms</h1>
+  <a href="{{ url_for('admin.admin_create_room') }}" class="btn btn-primary">
+    <i class="fas fa-plus-circle me-1"></i> Add Room
+  </a>
+</div>
+
+<!-- Rooms table inside a styled card -->
+<div class="card shadow-sm">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Type</th>
+            <th>Floor</th>
+            <th>Available</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in rooms %}
+          <tr>
+            <td>{{ r.room_number }}</td>
+            <td>{{ r.room_type.name }}</td>
+            <td>{{ r.floor }}</td>
+            <td>
+              {% if r.is_available %}
+                <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Yes</span>
+              {% else %}
+                <span class="badge bg-danger"><i class="fas fa-times-circle me-1"></i>No</span>
+              {% endif %}
+            </td>
+            <td class="text-end">
+              <div class="btn-group btn-group-sm" role="group">
+                <a href="{{ url_for('admin.admin_edit_room', room_id=r.id) }}"
+                   class="btn btn-outline-secondary"
+                   title="Edit Room">
+                  <i class="fas fa-edit"></i>
+                </a>
+                <button type="button"
+                        class="btn btn-outline-danger"
+                        data-bs-toggle="modal"
+                        data-bs-target="#deleteRoomModal-{{ r.id }}"
+                        title="Delete Room">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Delete Confirmation Modal -->
+          <div class="modal fade"
+               id="deleteRoomModal-{{ r.id }}"
+               tabindex="-1"
+               aria-labelledby="deleteRoomLabel-{{ r.id }}"
+               aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                  <h5 class="modal-title" id="deleteRoomLabel-{{ r.id }}">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Confirm Delete
+                  </h5>
+                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Are you sure you want to delete room <strong>{{ r.room_number }}</strong>?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <a href="{{ url_for('admin.admin_delete_room', room_id=r.id) }}" class="btn btn-danger">Delete</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {% else %}
+          <tr>
+            <td colspan="5" class="text-center text-muted py-4">
+              No rooms found. <a href="{{ url_for('admin.admin_create_room') }}">Create one now</a>.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+{% block body %}
+<!-- Header with Back to Dashboard and New Service -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0">
+    <i class="fas fa-concierge-bell me-2"></i> Extra Services
+  </h1>
+  <div>
+    <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-outline-secondary me-2">
+      <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+    </a>
+    <a href="{{ url_for('admin.admin_create_extra_service') }}" class="btn btn-primary">
+      <i class="fas fa-plus-circle me-1"></i> New Service
+    </a>
+  </div>
+</div>
+
+<!-- Table in Card -->
+<div class="card shadow-sm">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Type</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in services %}
+          <tr>
+            <td>{{ s.id }}</td>
+            <td>{{ s.name }}</td>
+            <td>${{ "%.2f"|format(s.price) }}</td>
+            <td class="text-capitalize">{{ s.type }}</td>
+            <td class="text-end">
+              <div class="btn-group btn-group-sm" role="group">
+                <a href="{{ url_for('admin.admin_edit_extra_service', svc_id=s.id) }}"
+                   class="btn btn-outline-secondary" title="Edit">
+                  <i class="fas fa-edit"></i>
+                </a>
+                <button type="button"
+                        class="btn btn-outline-danger"
+                        data-bs-toggle="modal"
+                        data-bs-target="#deleteServiceModal-{{ s.id }}"
+                        title="Delete">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Delete Confirmation Modal -->
+          <div class="modal fade"
+               id="deleteServiceModal-{{ s.id }}"
+               tabindex="-1"
+               aria-labelledby="deleteServiceLabel-{{ s.id }}"
+               aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                  <h5 class="modal-title" id="deleteServiceLabel-{{ s.id }}">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Confirm Delete
+                  </h5>
+                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Are you sure you want to delete the service <strong>{{ s.name }}</strong>?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <a href="{{ url_for('admin.admin_delete_extra_service', svc_id=s.id) }}" class="btn btn-danger">Delete</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {% else %}
+          <tr>
+            <td colspan="5" class="text-center text-muted py-4">
+              No extra services found.
+              <a href="{{ url_for('admin.admin_create_extra_service') }}">Add one now</a>.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

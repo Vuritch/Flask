@@ -1,0 +1,147 @@
+{% extends "layout.html" %}
+
+{% block body %}
+  <style>
+    /* STAT CARDS: equal height */
+    .stat-card {
+      height: 100%;
+      border: none;
+      border-radius: .75rem;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,.1);
+    }
+    .stat-card .card-body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 150px;
+      text-align: center;
+    }
+    .stat-icon  { font-size: 2rem; opacity: .6; margin-bottom: .5rem; }
+    .stat-label { text-transform: uppercase; font-size: .85rem; color: #6c757d; }
+    .stat-value { font-size: 2rem; font-weight: 600; margin-top: .25rem; }
+
+    /* ACTION CARDS: equal height */
+    .action-card {
+      height: 100%;
+      border-radius: .75rem;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .action-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(0,0,0,.1);
+    }
+    .action-card .card-body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 80px;
+      font-size: 1.1rem;
+    }
+    .action-card i {
+      font-size: 1.5rem;
+      margin-right: .5rem;
+      color: #007bff;
+    }
+
+    /* BACK button row */
+    .back-row {
+      margin-top: 1.5rem;
+    }
+  </style>
+
+  <div class="mb-4">
+    <h1>Admin Dashboard</h1>
+    <p class="text-muted">Quick overview of your resort’s activity and management tools.</p>
+  </div>
+
+  <!-- stats -->
+  <div class="row g-4 mb-5">
+    {% set icon_map = {
+      'Users':'fas fa-users',
+      'Bookings':'fas fa-calendar-check',
+      'Guests':'fas fa-child',
+      'Room Types':'fas fa-th-large',
+      'Rooms':'fas fa-door-open',
+      'Extras':'fas fa-concierge-bell',
+      'Guest Options':'fas fa-child'
+    } %}
+    {% for label, count in stats.items() %}
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="card stat-card shadow-sm">
+          <div class="card-body">
+            <i class="stat-icon {{ icon_map[label] }}"></i>
+            <div class="stat-label">{{ label }}</div>
+            <div class="stat-value">{{ count }}</div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- admin actions: single row of cards -->
+  <div class="row g-4 mb-5">
+    <div class="col-6 col-md-4 col-lg-2">
+      <a href="{{ url_for('admin.admin_users') }}" class="text-decoration-none">
+        <div class="card action-card shadow-sm">
+          <div class="card-body"><i class="fas fa-user-cog"></i> Manage Users</div>
+        </div>
+      </a>
+    </div>
+    <div class="col-6 col-md-4 col-lg-2">
+      <a href="{{ url_for('admin.admin_bookings') }}" class="text-decoration-none">
+        <div class="card action-card shadow-sm">
+          <div class="card-body"><i class="fas fa-calendar-check"></i> Bookings</div>
+        </div>
+      </a>
+    </div>
+    <div class="col-6 col-md-4 col-lg-2">
+      <a href="{{ url_for('admin.admin_guests') }}" class="text-decoration-none">
+        <div class="card action-card shadow-sm">
+          <div class="card-body"><i class="fas fa-child"></i> Guests</div>
+        </div>
+      </a>
+    </div>
+    <div class="col-6 col-md-4 col-lg-2">
+      <a href="{{ url_for('admin.admin_room_types') }}" class="text-decoration-none">
+        <div class="card action-card shadow-sm">
+          <div class="card-body"><i class="fas fa-bed"></i> Room Types</div>
+        </div>
+      </a>
+    </div>
+    <div class="col-6 col-md-4 col-lg-2">
+      <a href="{{ url_for('admin.admin_rooms') }}" class="text-decoration-none">
+        <div class="card action-card shadow-sm">
+          <div class="card-body"><i class="fas fa-door-closed"></i> Rooms</div>
+        </div>
+      </a>
+    </div>
+    <div class="col-6 col-md-4 col-lg-2">
+      <a href="{{ url_for('admin.admin_extra_services') }}" class="text-decoration-none">
+        <div class="card action-card shadow-sm">
+          <div class="card-body"><i class="fas fa-concierge-bell"></i> Extra Services</div>
+        </div>
+      </a>
+    </div>
+    <div class="col-6 col-md-4 col-lg-2">
+      <a href="{{ url_for('admin.admin_guest_options') }}" class="text-decoration-none">
+        <div class="card action-card shadow-sm">
+          <div class="card-body"><i class="fas fa-child"></i> Guest Options</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- back to site -->
+  <div class="row back-row">
+    <div class="col-12 col-md-4">
+      <a href="{{ url_for('main.index') }}" class="btn btn-outline-primary w-100">
+        <i class="fas fa-arrow-left me-2"></i> Back to Site
+      </a>
+    </div>
+  </div>
+{% endblock %}

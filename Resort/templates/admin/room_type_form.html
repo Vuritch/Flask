@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+{% block body %}
+  <!-- Back button + page title -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <a href="{{ url_for('admin.admin_room_types') }}" class="btn btn-outline-secondary">
+      <i class="fas fa-arrow-left me-1"></i> Back
+    </a>
+    <h1 class="h3 mb-0">{{ title }}</h1>
+    <div></div>
+  </div>
+
+  <!-- Card wrapper -->
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <form method="POST" enctype="multipart/form-data" novalidate>
+        {{ form.hidden_tag() }}
+
+        <!-- Name / Price / Max Guests -->
+        <div class="row g-3 mb-4">
+          <div class="col-md-4">
+            <label class="form-label">{{ form.name.label }}</label>
+            {{ form.name(class="form-control") }}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">{{ form.base_price.label }}</label>
+            {{ form.base_price(class="form-control") }}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">{{ form.max_guests.label }}</label>
+            {{ form.max_guests(class="form-control") }}
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-4">
+          <label class="form-label">{{ form.description.label }}</label>
+          {{ form.description(class="form-control", rows="4") }}
+        </div>
+
+        <!-- Main Image Upload + Preview -->
+        <div class="mb-4">
+          <label class="form-label">{{ form.main_image.label }}</label>
+          {{ form.main_image(class="form-control") }}
+          {% if rt and rt.main_image %}
+            <div class="mt-2">
+              <img src="{{ url_for('static', filename='uploads/' ~ rt.main_image) }}"
+                   class="img-thumbnail" style="max-width: 200px;">
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Gallery Images Upload + Thumbnails -->
+        <div class="mb-4">
+          <label class="form-label">{{ form.gallery_images.label }}</label>
+          {{ form.gallery_images(class="form-control", multiple=true) }}
+          {% if rt and rt.gallery_images %}
+            <div class="row row-cols-3 row-cols-md-6 g-2 mt-3">
+              {% for img in rt.gallery_images.split(',') %}
+              <div class="col">
+                <img src="{{ url_for('static', filename='uploads/' ~ img) }}"
+                     class="img-fluid rounded shadow-sm">
+              </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Features -->
+        <div class="mb-4">
+          <label class="form-label">{{ form.features.label }}</label>
+          {{ form.features(class="form-control", placeholder="Comma-separate feature list") }}
+          <small class="form-text text-muted">Enter each feature separated by commas.</small>
+        </div>
+
+        <!-- Luxury Toggle + Label -->
+        <div class="form-check form-switch mb-3">
+          {{ form.is_luxury(class="form-check-input") }}
+          <label class="form-check-label">{{ form.is_luxury.label }}</label>
+        </div>
+        <div class="mb-4">
+          <label class="form-label">{{ form.luxury_label.label }}</label>
+          {{ form.luxury_label(class="form-control", placeholder="E.g. ★ Luxury Suite") }}
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-success">
+          <i class="fas fa-save me-1"></i> {{ form.submit.label.text }}
+        </button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

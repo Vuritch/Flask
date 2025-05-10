@@ -1,0 +1,74 @@
+{% extends 'layout.html' %}
+{% block title %}Confirm Booking{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+  <div class="card shadow p-4">
+
+    <h3 class="mb-4 text-center text-primary">📝 Confirm Your Booking</h3>
+
+    <!-- Guest Info -->
+    <h5 class="text-secondary">👤 Guest Information:</h5>
+    <ul class="list-group mb-4">
+      <li class="list-group-item"><strong>Name:</strong>        {{ guest.guest_name }}</li>
+      <li class="list-group-item"><strong>Age:</strong>         {{ guest.guest_age }}</li>
+      <li class="list-group-item"><strong>Email:</strong>       {{ guest.guest_email }}</li>
+      <li class="list-group-item"><strong>Phone:</strong>       {{ guest.guest_phone }}</li>
+      <li class="list-group-item"><strong>Nationality:</strong> {{ guest.guest_nationality }}</li>
+      <li class="list-group-item"><strong>Address:</strong>     {{ guest.guest_address }}</li>
+    </ul>
+
+    <!-- Booking Summary -->
+    <h5 class="text-secondary">🏨 Booking Details:</h5>
+    <ul class="list-group mb-4">
+      <li class="list-group-item">
+        <strong>Room:</strong>
+        {{ room.room_type.name }} — Room #{{ room.room_number }}
+      </li>
+      <li class="list-group-item"><strong>Check-in:</strong>   {{ pending.check_in }}</li>
+      <li class="list-group-item"><strong>Check-out:</strong>  {{ pending.check_out }}</li>
+      <li class="list-group-item">
+        <strong>Guests:</strong>
+        {{ opt.adult_count }} Adult(s), {{ opt.child_count }} Child(ren)
+      </li>
+      <li class="list-group-item">
+        <strong>Bed Preference:</strong>
+        {{ pending.bed_preference or 'None' }}
+      </li>
+      <li class="list-group-item">
+        <strong>Dining Package:</strong>
+        {{ dining.name if dining else 'None' }}
+      </li>
+      <li class="list-group-item">
+        <strong>Service Extras:</strong>
+        {% if services %}
+          {{ services|map(attribute='name')|join(', ') }}
+        {% else %}
+          None
+        {% endif %}
+      </li>
+      <li class="list-group-item"><strong>Room Rate:</strong>     ${{ pending.room_rate }}</li>
+      <li class="list-group-item"><strong>Taxes & Fees:</strong>  ${{ pending.taxes_and_fees }}</li>
+      <li class="list-group-item"><strong>Dining Total:</strong>  ${{ pending.dining_total }}</li>
+      <li class="list-group-item"><strong>Services Total:</strong>$ {{ pending.services_total }}</li>
+      <li class="list-group-item">
+        <strong>Total Price:</strong>
+        <strong>${{ pending.total_price }}</strong>
+      </li>
+    </ul>
+
+    <form method="POST"
+          action="{{ url_for('bookings.confirm_booking') }}">
+      <div class="d-flex justify-content-between">
+        <a href="{{ url_for('bookings.guest') }}"
+           class="btn btn-secondary">
+          ← Edit Information
+        </a>
+        <button type="submit" class="btn btn-success">
+          ✅ Confirm & Proceed to Payment
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

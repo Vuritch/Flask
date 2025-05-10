@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block body %}
+  <!-- Header with Title and Back Button -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">{{ title }}</h1>
+    <a href="{{ url_for('admin.admin_guest_options') }}" class="btn btn-outline-secondary">
+      <i class="fas fa-arrow-left me-1"></i> Back to List
+    </a>
+  </div>
+
+  <!-- Card Wrapper for Form -->
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <form method="POST" novalidate>
+        {{ form.hidden_tag() }}
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">{{ form.adult_count.label.text }}</label>
+            {{ form.adult_count(class="form-control", placeholder="e.g. 2") }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">{{ form.child_count.label.text }}</label>
+            {{ form.child_count(class="form-control", placeholder="e.g. 1") }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">{{ form.label.label.text }}</label>
+          {{ form.label(class="form-control", placeholder="e.g. 2 Adults, 1 Child") }}
+        </div>
+
+        <div class="d-flex justify-content-end">
+          <button type="submit" class="btn btn-success me-2">
+            <i class="fas fa-save me-1"></i> Save
+          </button>
+          <a href="{{ url_for('admin.admin_guest_options') }}" class="btn btn-secondary">
+            <i class="fas fa-times me-1"></i> Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

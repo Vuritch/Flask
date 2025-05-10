@@ -1,0 +1,715 @@
+
+{% extends 'layout.html' %}
+
+
+{% block body %}
+<style>
+    
+    .date-warning { display: none; color: #dc3545; font-size: .875rem; margin-top: .25rem; }
+    
+   .booking-hero {
+       position: relative;
+       min-height: 250px;
+       background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+                   url("{{ url_for('static', filename='images/sasha-kaunas-xEaAoizNFV8-unsplash.jpg') }}") center/cover no-repeat;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       color: white;
+       text-align: center;
+       padding: 2rem 1rem;
+       margin-top: -1.5rem;
+   }
+   
+   .booking-title {
+       font-size: 3rem;
+       font-weight: 700;
+       margin-bottom: 1rem;
+       text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+   }
+   
+   .booking-subtitle {
+       font-size: 1.25rem;
+       max-width: 600px;
+       margin: 0 auto;
+       text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+   }
+   
+   .booking-container {
+       padding: 4rem 0;
+       background-color: #f8f9fa;
+   }
+   
+   .booking-card {
+       background: white;
+       border-radius: 20px;
+       box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+       padding: 2rem;
+       margin-bottom: 2rem;
+       transition: transform 0.3s ease, box-shadow 0.3s ease;
+   }
+   
+   .booking-card:hover {
+       transform: translateY(-5px);
+       box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+   }
+   
+   .form-group {
+       margin-bottom: 1.5rem;
+   }
+   
+   .form-label {
+       font-weight: 600;
+       color: #333;
+       margin-bottom: 0.5rem;
+   }
+   
+   .form-control {
+       border: 2px solid #e9ecef;
+       border-radius: 10px;
+       padding: 0.75rem;
+       transition: all 0.3s ease;
+   }
+   
+   .form-control:focus {
+       border-color: #007bff;
+       box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+   }
+   
+   .btn-book {
+       background: linear-gradient(45deg, #007bff, #00bcd4);
+       border: none;
+       color: white;
+       padding: 1rem 2rem;
+       border-radius: 10px;
+       font-weight: 600;
+       text-transform: uppercase;
+       letter-spacing: 1px;
+       transition: all 0.3s ease;
+       width: 100%;
+   }
+   
+   .btn-book:hover {
+       background: linear-gradient(45deg, #0056b3, #008ba3);
+       transform: translateY(-2px);
+       box-shadow: 0 5px 15px rgba(0,123,255,0.4);
+   }
+   
+   .amenity-icon {
+       font-size: 2rem;
+       color: #007bff;
+       margin-bottom: 1rem;
+   }
+   
+   .room-type {
+       border: 2px solid #e9ecef;
+       border-radius: 15px;
+       padding: 1.5rem;
+       margin-bottom: 2rem;
+       cursor: pointer;
+       transition: all 0.3s ease;
+       background: white;
+   }
+   
+   .room-type:hover {
+       border-color: #007bff;
+       transform: translateY(-5px);
+       box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+   }
+   
+   .room-type.selected {
+       border-color: #007bff;
+       background-color: #e7f5ff;
+       transform: translateY(-5px);
+       box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+   }
+   
+   .room-type img {
+       width: 100%;
+       height: 250px;
+       object-fit: cover;
+       border-radius: 10px;
+       margin-bottom: 1rem;
+   }
+   
+   .room-gallery {
+       display: flex;
+       gap: 10px;
+       margin-top: 1rem;
+       overflow-x: auto;
+       padding-bottom: 10px;
+   }
+   
+   .room-gallery img {
+       width: 80px;
+       height: 60px;
+       object-fit: cover;
+       border-radius: 5px;
+       cursor: pointer;
+       transition: all 0.3s ease;
+   }
+   
+   .room-gallery img:hover {
+       transform: scale(1.1);
+   }
+   
+   .room-features {
+       display: grid;
+       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+       gap: 1rem;
+       margin: 1rem 0;
+   }
+   
+   .feature-item {
+       display: flex;
+       align-items: center;
+       gap: 0.5rem;
+       font-size: 0.9rem;
+   }
+   
+   .feature-item i {
+       color: #28a745;
+   }
+   
+   .room-description {
+       color: #666;
+       margin: 1rem 0;
+       line-height: 1.6;
+   }
+   
+   .price-tag {
+       background: linear-gradient(45deg, #007bff, #00bcd4);
+       color: white;
+       padding: 0.5rem 1rem;
+       border-radius: 25px;
+       display: inline-block;
+       font-weight: bold;
+       margin-top: 1rem;
+   }
+   
+   .room-capacity {
+       color: #6c757d;
+       font-size: 0.9rem;
+       margin-top: 0.5rem;
+   }
+   
+   .badge-luxury {
+       background: linear-gradient(45deg, #FFD700, #FFA500);
+       color: white;
+       padding: 0.5rem 1rem;
+       border-radius: 25px;
+       font-size: 0.8rem;
+       margin-bottom: 1rem;
+       display: inline-block;
+   }
+   
+   .price {
+       font-size: 1.5rem;
+       font-weight: 700;
+       color: #007bff;
+   }
+   
+   .features-list {
+       list-style: none;
+       padding: 0;
+   }
+   
+   .features-list li {
+       margin-bottom: 0.5rem;
+       display: flex;
+       align-items: center;
+   }
+   
+   .features-list li i {
+       color: #28a745;
+       margin-right: 0.5rem;
+   }
+   
+   .room-amenities {
+       display: grid;
+       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+       gap: 1rem;
+       margin-top: 1rem;
+   }
+   
+   .amenity-item {
+       display: flex;
+       align-items: center;
+       gap: 0.5rem;
+   }
+   
+   .amenity-item i {
+       color: #007bff;
+   }
+   
+   .total-price-section {
+       background: #e7f5ff;
+       padding: 1rem;
+       border-radius: 10px;
+       margin-top: 1rem;
+   }
+   
+   .date-warning {
+       display: none;
+       color: #dc3545;
+       font-size: 0.875rem;
+       margin-top: 0.25rem;
+   }
+   
+   .booking-summary {
+       background: #f8f9fa;
+       padding: 1rem;
+       border-radius: 10px;
+       margin-top: 1rem;
+   }
+   
+   .cancellation-policy {
+       font-size: 0.875rem;
+       color: #6c757d;
+       margin-top: 1rem;
+   }
+   
+   @media (max-width: 768px) {
+       .booking-title {
+           font-size: 2rem;
+       }
+       
+       .booking-subtitle {
+           font-size: 1rem;
+       }
+       
+       .booking-container {
+           padding: 2rem 0;
+       }
+   }
+   
+   </style>
+
+<div class="booking-hero">
+    <div>
+      <h1 class="booking-title">Book Your Dream Stay</h1>
+      <p class="booking-subtitle">Experience luxury and comfort at Desert Rose Resort</p>
+    </div>
+  </div>
+  
+  <div class="booking-container">
+    <div class="container">
+  
+      <div class="row">
+        <!-- LEFT: Room-type cards -->
+        <div class="col-lg-8">
+          <div class="booking-card">
+            <h2 class="mb-4">Select Your Perfect Room</h2>
+            {% for room in room_types %}
+              <div class="room-type {% if loop.first %}selected{% endif %}"
+                   data-price="{{ room.base_price }}"
+                   data-room-type-id="{{ room.id }}"
+                   data-max-guests="{{ room.max_guests }}">
+                <div class="row">
+                  <div class="col-12">
+                    {% if room.is_luxury %}
+                      <span class="badge-luxury">{{ room.luxury_label or '★ Luxury' }}</span>
+                    {% endif %}
+                    <img src="{{ url_for('static', filename='uploads/' ~ room.main_image) }}" …>
+                    class="main-image" alt="{{ room.name }}">
+                    <div class="room-gallery">
+                      {% for img in room.gallery_images.split(',') %}
+                      <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="Gallery">
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <div class="col-12 mt-3">
+                    <h3>{{ room.name }}</h3>
+                    <span class="room-capacity">
+                      <i class="fas fa-user"></i> Max {{ room.max_guests }}
+                    </span>
+                    <p class="room-description">{{ room.description }}</p>
+                    <div class="room-features">
+                      {% for f in room.features.split(',') %}
+                        <div class="feature-item"><i class="fas fa-check"></i>{{ f }}</div>
+                      {% endfor %}
+                    </div>
+                    <div class="price-tag">${{ room.base_price }}/night</div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+  
+        <!-- RIGHT: Booking form -->
+        <div class="col-lg-4">
+          <div class="booking-card">
+            <h2 class="mb-4">Booking Details</h2>
+            <form id="bookingForm" method="POST" novalidate>
+              <!-- hidden inputs for prices -->
+              <input type="hidden" name="room_type_id"   id="roomTypeId">
+              <input type="hidden" name="room_rate"      id="roomRateInput">
+              <input type="hidden" name="taxes_and_fees" id="taxesAndFeesInput">
+              <input type="hidden" name="dining_total"   id="diningTotalInput">
+              <input type="hidden" name="services_total" id="servicesTotalInput">
+              <input type="hidden" name="total_price"    id="totalPrice">
+  
+              <!-- check-in -->
+              <div class="form-group">
+                <label class="form-label">Check-in Date</label>
+                <input type="date"
+                       name="check_in"
+                       id="checkIn"
+                       class="form-control"
+                       required
+                       min="{{ today }}">
+                <div class="date-warning" id="checkInWarning">
+                  Please choose a valid check-in date.
+                </div>
+              </div>
+  
+              <!-- check-out -->
+              <div class="form-group">
+                <label class="form-label">Check-out Date</label>
+                <input type="date"
+                       name="check_out"
+                       id="checkOut"
+                       class="form-control"
+                       required>
+                <div class="date-warning" id="checkOutWarning">
+                  Check-out must be after check-in.
+                </div>
+              </div>
+  
+              <!-- room number -->
+              <div class="form-group">
+                <label class="form-label">Select Room Number</label>
+                <select name="room_id"
+                        id="roomSelect"
+                        class="form-control"
+                        required>
+                  <option value="" disabled selected>Choose a room…</option>
+                  {% for rt in room_types %}
+                    {% for r in rt.rooms if r.is_available %}
+                      <option value="{{ r.id }}" data-type-id="{{ rt.id }}">
+                        Room {{ r.room_number }} – {{ rt.name }} – Floor {{ r.floor }}
+                      </option>
+                    {% endfor %}
+                  {% endfor %}
+                </select>
+              </div>
+  
+              <!-- guests -->
+             <!-- Guest Information + Extra-Adult Pricing Hint -->
+<div class="form-group">
+    <label class="form-label">Guest Information</label>
+    <select name="guests"
+            id="guestOptionSelect"
+            class="form-control"
+            required>
+      <option value="" disabled selected>Select number of guests</option>
+      {% for go in guest_options %}
+        <option value="{{ go.id }}"
+                data-adults="{{ go.adult_count }}"
+                data-children="{{ go.child_count }}">
+          {{ go.label }}
+        </option>
+      {% endfor %}
+    </select>
+    <!-- Pricing hint; will update live if they exceed included adults -->
+    <small id="guestPriceInfo" class="text-muted mt-1 d-block">
+      Base rate covers up to {{ included_adults }} adults. 
+      Each extra adult beyond {{ included_adults }}: ${{ extra_adult_price }}/night.
+    </small>
+  </div>
+  
+  
+           
+<div class="form-group">
+  <label class="form-label">Bed Preference</label>
+  {% for bed in bed_extras %}
+    <div class="form-check">
+      <input class="form-check-input bed-option"
+             type="checkbox"
+             name="bed_options[]"
+             id="bed_{{ bed.id }}"
+             value="{{ bed.id }}"
+             data-price="{{ bed.price }}"
+             data-name="{{ bed.name }}">
+      <label class="form-check-label" for="bed_{{ bed.id }}">
+        {{ bed.name }}{% if bed.price>0 %} (+${{bed.price}}/night){% endif %}
+      </label>
+    </div>
+  {% endfor %}
+</div>
+
+  
+              <!-- dining (required radio) -->
+              <div class="form-group">
+                <label class="form-label">Dining Package</label>
+                {% for d in dining_extras %}
+                  <div class="form-check">
+                    <input class="form-check-input dining-option"
+                           type="radio"
+                           name="dining_package"
+                           id="dining_{{ d.id }}"
+                           value="{{ d.id }}"
+                           data-price="{{ d.price }}"
+                    <label class="form-check-label" for="dining_{{ d.id }}">
+                      {{ d.name }} (${{ d.price }})
+                    </label>
+                  </div>
+                {% endfor %}
+              </div>
+  
+<!-- Additional Services -->
+<div class="form-group">
+    <label class="form-label">Additional Services</label>
+    {% for extra in service_extras %}
+      <div class="form-check">
+        <input
+          class="form-check-input service-option"
+          type="checkbox"
+          name="extras[]"
+          id="extra_{{ extra.id }}"
+          data-price="{{ extra.price }}"
+          data-per-adult="{{ 'true' if extra.per_adult else 'false' }}"
+        >
+        <label class="form-check-label" for="extra_{{ extra.id }}">
+          {{ extra.name }}
+          (+${{ extra.price }}
+           {% if extra.per_adult %}/adult{% endif %})
+        </label>
+      </div>
+    {% endfor %}
+  </div>
+  
+  
+              <!-- special requests (optional) -->
+              <div class="form-group">
+                <label class="form-label">Special Requests <small>(optional)</small></label>
+                <textarea name="special_requests"
+                          class="form-control"
+                          rows="3"
+                          placeholder="Any special requirements?"></textarea>
+              </div>
+  
+              <!-- price breakdown -->
+              <div class="total-price-section">
+                <h4>Price Breakdown</h4>
+                <div class="d-flex justify-content-between">
+                  <span>Room Rate:</span>
+                  <span id="roomRate">$0</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span>Taxes & Fees (12%):</span>
+                  <span id="taxesAndFees">$0</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span>Dining Package:</span>
+                  <span id="diningTotal">$0</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span>Additional Services:</span>
+                  <span id="servicesTotal">$0</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between fw-bold">
+                  <span>Total:</span>
+                  <span id="finalTotal">$0</span>
+                </div>
+              </div>
+              
+              <div class="d-flex justify-content-between mt-3">
+                <button type="reset"
+                        id="resetBtn"
+                        class="btn btn-outline-secondary">
+                  Clear
+                </button>
+                <button type="submit"
+                        id="submitBtn"
+                        class="btn btn-book"
+                        disabled>
+                  Confirm Booking
+                </button>
+              </div>
+              
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // — Element refs —
+      const roomTypes     = document.querySelectorAll('.room-type');
+      const checkIn       = document.getElementById('checkIn');
+      const checkOut      = document.getElementById('checkOut');
+      const guestSelect   = document.getElementById('guestOptionSelect');
+      const roomSelect    = document.getElementById('roomSelect');
+      const bedOptions    = document.querySelectorAll('.bed-option');
+      const diningRadios  = document.querySelectorAll('.dining-option');
+      const serviceBoxes  = document.querySelectorAll('.service-option');
+      const submitBtn     = document.getElementById('submitBtn');
+      const warnings      = {
+        in:  document.getElementById('checkInWarning'),
+        out: document.getElementById('checkOutWarning')
+      };
+    
+      // Hidden inputs to sync
+      const roomTypeInput = document.getElementById('roomTypeId');
+      const roomRateInput = document.getElementById('roomRateInput');
+      const taxesInput    = document.getElementById('taxesAndFeesInput');
+      const diningInput   = document.getElementById('diningTotalInput');
+      const servicesInput = document.getElementById('servicesTotalInput');
+      const totalInput    = document.getElementById('totalPrice');
+    
+      // bump check-out.min to the day after check-in
+      checkIn.addEventListener('change', () => {
+        const d = new Date(checkIn.value);
+        if (!isNaN(d)) {
+          d.setDate(d.getDate() + 1);
+          checkOut.min = d.toISOString().split('T')[0];
+        }
+        updateAll();
+      });
+    
+      // hide guest options exceeding maxGuests
+      function updateGuestOptions(max) {
+        Array.from(guestSelect.options).forEach(o => {
+          const a = parseInt(o.dataset.adults || 0, 10);
+          const c = parseInt(o.dataset.children || 0, 10);
+          o.hidden = (a + c) > max;
+        });
+        if (guestSelect.selectedOptions[0]?.hidden) {
+          const vis = Array.from(guestSelect.options).find(o => !o.hidden);
+          if (vis) guestSelect.value = vis.value;
+        }
+      }
+    
+      // filter roomSelect by selected roomType
+      function updateRoomList() {
+        const selType = document.querySelector('.room-type.selected').dataset.roomTypeId;
+        Array.from(roomSelect.options).forEach(o => {
+          o.hidden = o.dataset.typeId !== selType;
+        });
+        if (roomSelect.selectedOptions[0]?.hidden) {
+          const vis = Array.from(roomSelect.options).find(o => !o.hidden);
+          if (vis) roomSelect.value = vis.value;
+        }
+      }
+    
+      // calculate total guests
+      function numGuests() {
+        const o = guestSelect.selectedOptions[0];
+        return parseInt(o.dataset.adults || 0, 10)
+             + parseInt(o.dataset.children || 0, 10);
+      }
+    
+      // main update: validation, pricing, enable/disable submit
+      function updateAll() {
+        // — date validation —
+        const inD  = new Date(checkIn.value),
+              outD = new Date(checkOut.value);
+        warnings.in.style.display  = isNaN(inD) ? 'block' : 'none';
+        warnings.out.style.display = (isNaN(outD) || outD <= inD) ? 'block' : 'none';
+    
+        // — guest & room filtering —
+        const selTypeElem = document.querySelector('.room-type.selected');
+        const maxGuests   = parseInt(selTypeElem.dataset.maxGuests, 10) || 1;
+        updateGuestOptions(maxGuests);
+        updateRoomList();
+        roomTypeInput.value = selTypeElem.dataset.roomTypeId;
+    
+        // — room + nights + per-guest pricing —
+        let roomTotal = 0, nights = 0;
+        if (!isNaN(inD) && !isNaN(outD) && outD > inD) {
+          nights = (outD - inD) / (1000 * 60 * 60 * 24);
+          const base = parseFloat(selTypeElem.dataset.price) || 0;
+          roomTotal = base * nights * numGuests();
+          // extra beds
+          bedOptions.forEach(cb => {
+            if (cb.checked) {
+              roomTotal += (parseFloat(cb.dataset.price) || 0) * nights;
+            }
+          });
+        }
+    
+        // — taxes 12% —
+        const taxTotal = roomTotal * 0.12;
+    
+        // — dining package —
+        let diningTotal = 0;
+        const dsel = document.querySelector('input[name="dining_package"]:checked');
+        if (dsel && nights > 0) {
+          diningTotal = parseFloat(dsel.dataset.price || 0) * numGuests() * nights;
+        }
+    
+        // — additional services —
+        let servicesTotal = 0;
+        serviceBoxes.forEach(cb => {
+          if (!cb.checked) return;
+          const price    = parseFloat(cb.dataset.price) || 0;
+          const perAdult = cb.dataset.perAdult === 'true';
+          servicesTotal += perAdult
+            ? price * numGuests()
+            : price;
+        });
+    
+        // — grand total —
+        const grand = roomTotal + taxTotal + diningTotal + servicesTotal;
+    
+        // — update UI —
+        document.getElementById('roomRate').textContent     = `$${roomTotal.toFixed(2)}`;
+        document.getElementById('taxesAndFees').textContent = `$${taxTotal.toFixed(2)}`;
+        document.getElementById('diningTotal').textContent  = `$${diningTotal.toFixed(2)}`;
+        document.getElementById('servicesTotal').textContent=`$${servicesTotal.toFixed(2)}`;
+        document.getElementById('finalTotal').textContent   = `$${grand.toFixed(2)}`;
+    
+        // — sync hidden inputs —
+        roomRateInput.value   = roomTotal.toFixed(2);
+        taxesInput.value      = taxTotal.toFixed(2);
+        diningInput.value     = diningTotal.toFixed(2);
+        servicesInput.value   = servicesTotal.toFixed(2);
+        totalInput.value      = grand.toFixed(2);
+    
+        // — only require: checkIn, checkOut, roomSelect & guestSelect + no date warnings —
+        const okDates  = checkIn.value && checkOut.value
+                       && warnings.in.style.display === 'none'
+                       && warnings.out.style.display === 'none';
+        const okCore   = okDates && !!roomSelect.value && !!guestSelect.value;
+        submitBtn.disabled = !okCore;
+      }
+    
+      // — wire events —
+      roomTypes.forEach(r => r.addEventListener('click', () => {
+        roomTypes.forEach(x => x.classList.remove('selected'));
+        r.classList.add('selected');
+        updateAll();
+      }));
+      [ checkIn, checkOut, guestSelect, roomSelect ].forEach(el =>
+        el.addEventListener('change', updateAll)
+      );
+      bedOptions.forEach(cb => cb.addEventListener('change', updateAll));
+      diningRadios.forEach(rb => rb.addEventListener('change', updateAll));
+      serviceBoxes.forEach(sb => sb.addEventListener('change', updateAll));
+    
+      // — handle form reset —
+      const form = document.getElementById('bookingForm');
+      form.addEventListener('reset', () => {
+        // allow browser to clear inputs, then re-run our logic
+        setTimeout(updateAll, 0);
+      });
+    
+      // initial run
+      updateAll();
+    
+      // thumbnail swap (unchanged)
+      document.querySelectorAll('.room-gallery img').forEach(img => {
+        img.addEventListener('click', function(){
+          const main = this.closest('.room-type').querySelector('.main-image');
+          [ main.src, this.src ] = [ this.src, main.src ];
+        });
+      });
+    });
+    </script>
+    
+  {% endblock %}
